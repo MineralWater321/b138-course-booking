@@ -28,3 +28,67 @@ module.exports.addCourse = async (reqBody, adminData) => {
 		return (`You have no access`);
 	}
 }
+
+//Controller method for retrieving all the courses
+module.exports.getAllCourses = () => {
+	return Course.find({}).then(result => {
+		return result;
+	})
+}
+
+//Retrieve all active courses
+module.exports.getAllActive = () => {
+	return Course.find({isActive: true}).then(result => {
+		return result;
+	})
+}
+
+//Retrieving a specific course
+module.exports.getCourse = (reqParams) => {
+	return Course.findById(reqParams.courseId).then(result => {
+		return result;
+	})
+}
+
+//Update a course
+module.exports.updateCourse = async (reqParams, reqBody, user) => {
+	//Validate if user is admin
+	if(user.isAdmin){
+		//Specify the fields/properties of the document to be updated
+		let updatedCourse = {
+			name: reqBody.name,
+			description: reqBody.description,
+			price: reqBody.price
+		}
+		return Course.findByIdAndUpdate(reqParams.courseId, updatedCourse).then((course, error) => {
+			if(error){
+				return false;
+			}
+			else{
+				return true;
+			}
+		})
+	}
+	else{
+		return(`You have no access`);
+	}
+}
+
+//Archive a course
+module.exports.archiveCourse = async (reqParams, reqBody, user) => {
+	//Validate if user is admin
+	if(user.isAdmin){
+		
+		return Course.findByIdAndUpdate(reqParams.courseId, {isActive: reqBody.isActive}).then((course, error) => {
+			if(error){
+				return false;
+			}
+			else{
+				return true;
+			}
+		})
+	}
+	else{
+		return(`You have no access`);
+	}
+}
