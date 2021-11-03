@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/user")
+const courseRoutes = require("./routes/course")
+
 const app = express();
 
 //Connect to MongoDB
@@ -18,8 +20,11 @@ mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atl
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-//Defines the "users" string to be included for all user routes defined in the "user" route file
+//Defines the "/users" string to be included for all user routes defined in the "user" route file
 app.use("/users", userRoutes);
+
+//Defines the "/courses" string to be included for all course routes defined in the "course" route file
+app.use("/courses", courseRoutes);
 
 //Listening to port
 app.listen(process.env.PORT || 4000, () => {
