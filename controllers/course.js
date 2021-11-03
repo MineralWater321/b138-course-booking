@@ -4,7 +4,8 @@ const auth = require("../auth");
 //Create a new course
 module.exports.addCourse = (reqBody, adminData) => {
 	//Creates a variable "newCourse" and instantiates a new "Course" object using the mongoose model
-	if(adminData.isAdmin !== false){
+
+	if(adminData.isAdmin == true){
 		let newCourse = new Course({
 			name: reqBody.name,
 			description: reqBody.description,
@@ -21,7 +22,9 @@ module.exports.addCourse = (reqBody, adminData) => {
 		})
 	}
 	else{
-		return false;
+		//needs to return a promise with a value of false
+		let falsePromise = Promise.resolve(false);
+		return falsePromise;
 	}
 }
 
