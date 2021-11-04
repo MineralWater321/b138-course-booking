@@ -83,6 +83,7 @@ module.exports.getProfile = (data) => {
 //Enroll user to a class
 //Async await will be used in enrolling the user because we will need to update two separate documents
 module.exports.enroll = async (data, userData) => {
+	if(userData.isAdmin){
 		// Add the course ID in the enrollments array of the user
 		let isUserUpdated = await User.findById(data.userId).then(user => {
 			// Adds the courseId in the user's enrollment array
@@ -114,12 +115,17 @@ module.exports.enroll = async (data, userData) => {
 				}
 			})
 		})
-	
-	// Condition that will check if the user and course documents have been updated
-	if(isUserUpdated && isCourseUpdated){
-		return true;
+		// Condition that will check if the user and course documents have been updated
+		if(isUserUpdated && isCourseUpdated){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
-	else{
+	else {
 		return false;
 	}
+	
+	
 }
