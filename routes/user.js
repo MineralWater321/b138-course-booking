@@ -29,13 +29,26 @@ router.get("/details", auth.verify, (req, res) => {
 
 })
 
-//Another method
-/*router.get("/details", (req, res) => {
+//Another method for retrieving user details
+/*router.get("/details", auth.verify, (req, res) => {
 	
 	const userData = auth.decode(req.headers.authorization);
 
 	userController.getProfile(userData).then(resultFromController => res.send(resultFromController));
 })*/
+
+
+//Route to enrol user to a course
+router.post("/enroll", auth.verify, (req, res) => {
+	let data = {
+		userId : req.body.userId,
+		courseId : req.body.courseId
+	}
+
+	const userData = auth.decode(req.headers.authorization);
+
+	userController.enroll(data, userData).then(resultFromController => res.send(resultFromController));
+})
 
 
 

@@ -32,13 +32,11 @@ const userSchema = new mongoose.Schema({
 		},
 		enrolledOn: {
 			type: Date,
-			default: new Date(),
-			required: [true, "Date required"]
+			default: new Date()
 		},
 		status: {
 			type: String,
-			default: "Enrolled",
-			required: [true, "Status is required"]
+			default: "Enrolled"
 		},
 	}
 	]

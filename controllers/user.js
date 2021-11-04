@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const Course = require("../model/Course")
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
 
@@ -78,3 +79,47 @@ module.exports.getProfile = (data) => {
 		return result;
 	})
 }*/
+
+//Enroll user to a class
+//Async await will be used in enrolling the user because we will need to update two separate documents
+module.exports.enroll = async (data, userData) => {
+		// Add the course ID in the enrollments array of the user
+		let isUserUpdated = await User.findById(data.userId).then(user => {
+			// Adds the courseId in the user's enrollment array
+			user.enrollments.push({courseId : data.courseId});
+
+			// Saves the updated user information in the database
+			return user.save().then((user, error) => {
+				if(error){
+					return false;
+				}
+				else{
+					return true;
+				}
+			})
+		})
+
+		// Add the user ID in the enrollees array of the course
+		let isCourseUpdated = await Course.findById(data.courseId).then(course => {
+			// Adds the userId in the course's enrollees array
+			course.enrollees.push({userId : data.userId});
+
+			// Save the updated course information in the database
+			return course.save().then((course, error) => {
+				if(error){
+					return false;
+				}
+				else{
+					return true;
+				}
+			})
+		})
+	
+	// Condition that will check if the user and course documents have been updated
+	if(isUserUpdated && isCourseUpdated){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
